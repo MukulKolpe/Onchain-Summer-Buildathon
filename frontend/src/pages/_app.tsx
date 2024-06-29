@@ -1,6 +1,11 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import { headers } from "next/headers";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { cookieToInitialState } from "wagmi";
+
+import { getConfig } from "@/utils/wagmi";
+import { Providers } from "@/utils/providers";
 
 const colors = {
   brand: {
@@ -24,5 +29,13 @@ const config = {
 const theme = extendTheme({ colors, config });
 
 export default function App({ Component, pageProps }: AppProps) {
-  return  <ChakraProvider theme={theme}><Component {...pageProps} /> </ChakraProvider>;
+  const initialState = cookieToInitialState(getConfig());
+  return (
+    <ChakraProvider theme={theme}>
+      <Providers initialState={initialState}>
+        {" "}
+        <Component {...pageProps} />{" "}
+      </Providers>
+    </ChakraProvider>
+  );
 }
