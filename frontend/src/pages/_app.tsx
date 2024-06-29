@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { headers } from "next/headers";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { cookieToInitialState } from "wagmi";
+import Navbar from "@/components/Navbar";
 
 import { getConfig } from "@/utils/wagmi";
 import { Providers } from "@/utils/providers";
@@ -33,7 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
       <Providers initialState={initialState}>
-        {" "}
+        <Navbar />
         <Component {...pageProps} />{" "}
       </Providers>
     </ChakraProvider>
