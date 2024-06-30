@@ -1,7 +1,8 @@
 "use client";
-
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@chakra-ui/react";
+import { Address } from "@coinbase/onchainkit/identity";
+import "@coinbase/onchainkit/styles.css";
 
 function Home() {
   const account = useAccount();
@@ -16,7 +17,12 @@ function Home() {
         <div>
           status: {account.status}
           <br />
-          addresses: {JSON.stringify(account.addresses)}
+          {account.addresses !== undefined && (
+            <Address
+              className="bg-white px-2 py-1"
+              address={account.addresses[0]} // OnchainKit Working Component
+            />
+          )}
           <br />
           chainId: {account.chainId}
         </div>
