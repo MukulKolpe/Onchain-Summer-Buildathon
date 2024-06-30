@@ -28,8 +28,8 @@ const CreateOptionForm = () => {
 
   const convertToEpoch = (dateString: any) => {
     const epochValue = new Date(dateString + "T00:00:00Z").getTime() / 1000;
-    console.log(epochValue);
-    return epochValue;
+    console.log(epochValue * 1000);
+    return epochValue * 1000;
   };
 
   const approval = async () => {
