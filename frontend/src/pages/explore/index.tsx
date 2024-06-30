@@ -15,11 +15,12 @@ import {
   Heading,
   VStack,
   HStack,
+  Spinner,
 } from "@chakra-ui/react";
 
 const Explore = () => {
   const [options, setOptions] = useState<any[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const getOptions = async () => {
       const rpc = "https://sepolia.base.org";
@@ -38,6 +39,7 @@ const Explore = () => {
         cacheOptions.push(option);
       }
       setOptions(cacheOptions);
+      setLoading(false);
     };
 
     getOptions();
@@ -51,42 +53,46 @@ const Explore = () => {
         <Heading as="h1" size="xl" mb={6}>
           All Option Contracts
         </Heading>
-        <TableContainer
-          boxShadow="lg"
-          rounded="md"
-          p={6}
-          borderRadius="md"
-          width="100%"
-        >
-          <Table variant="striped" colorScheme="teal">
-            <Thead>
-              <Tr>
-                <Th>Option Id</Th>
-                <Th>Asset Name</Th>
-                <Th>Units</Th>
-                <Th>Expiry (in Days)</Th>
-                <Th>Bid</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {options.map((item) => {
-                const millisecdiff = item.expiryTime.toNumber() - Date.now();
-                const days = Math.floor(millisecdiff / (1000 * 60 * 60 * 24));
-                return (
-                  <Tr key={item.optionId}>
-                    <Td>{item[0].toString()}</Td>
-                    <Td>USDC</Td>
-                    <Td>{item.units.toString()}</Td>
-                    <Td>{days} Left</Td>
-                    <Td>
-                      <Button colorScheme="teal">Bid</Button>
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer>
+        {loading ? (
+          <Spinner size="xl" />
+        ) : (
+          <TableContainer
+            boxShadow="lg"
+            rounded="md"
+            p={6}
+            borderRadius="md"
+            width="100%"
+          >
+            <Table variant="striped" colorScheme="teal">
+              <Thead>
+                <Tr>
+                  <Th>Option Id</Th>
+                  <Th>Asset Name</Th>
+                  <Th>Units</Th>
+                  <Th>Expiry (in Days)</Th>
+                  <Th>Bid</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {options.map((item) => {
+                  const millisecdiff = item.expiryTime.toNumber() - Date.now();
+                  const days = Math.floor(millisecdiff / (1000 * 60 * 60 * 24));
+                  return (
+                    <Tr key={item.optionId}>
+                      <Td>{item[0].toString()}</Td>
+                      <Td>USDC</Td>
+                      <Td>{item.units.toString()}</Td>
+                      <Td>{days} Left</Td>
+                      <Td>
+                        <Button colorScheme="teal">Bid</Button>
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        )}
       </VStack>
     </Box>
   );
