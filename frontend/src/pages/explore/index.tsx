@@ -22,12 +22,12 @@ const Explore = () => {
 
   useEffect(() => {
     const getOptions = async () => {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
+      const rpc = "https://sepolia.base.org";
+      const provider = new ethers.providers.JsonRpcProvider(rpc);
       const contract = new ethers.Contract(
         process.env.NEXT_PUBLIC_OPTION_TRADING!,
         optionabi,
-        signer
+        provider
       );
 
       const x = await contract.totalOptions();
