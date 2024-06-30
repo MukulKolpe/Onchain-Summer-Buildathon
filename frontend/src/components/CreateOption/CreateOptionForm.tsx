@@ -15,6 +15,7 @@ import { useAccount } from "wagmi";
 import tokenabi from "../../../abi/erc20abi.json";
 import optionabi from "../../../abi/optiontrading.json";
 import { ethers } from "ethers";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 
 const CreateOptionForm = () => {
   const toast = useToast();
@@ -25,6 +26,11 @@ const CreateOptionForm = () => {
   const [contractExpiration, setContractExpiration] = useState("");
   const [isApproved, setIsApproved] = useState(false);
   const account = useAccount();
+  const { writeContract, data: hash } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const convertToEpoch = (dateString: any) => {
     const epochValue = new Date(dateString + "T00:00:00Z").getTime() / 1000;
@@ -33,60 +39,28 @@ const CreateOptionForm = () => {
   };
 
   const approval = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_TOKEN_ADDRESS,
-      tokenabi,
-      signer
-    );
-
-    const tx = await contract.approve(
-      process.env.NEXT_PUBLIC_OPTION_TRADING,
-      tokenAmt * 2 * 10 ** 6
-    );
-
-    await tx.wait(1);
-    setIsApproved(true);
-
-    toast({
-      title: "Approval Successful",
-      description: "You have successfully approved the contract",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
+    writeContract({
+      abi: tokenabi,
+      address: process.env.NEXT_PUBLIC_TOKEN_ADDRESS,
+      functionName: "approve",
+      args: [process.env.NEXT_PUBLIC_OPTION_TRADING, tokenAmt * 2 * 10 ** 6],
     });
   };
 
   const createOption = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      process.env.NEXT_PUBLIC_OPTION_TRADING,
-      optionabi,
-      signer
-    );
-
-    const address = account.addresses[0];
-
-    const tx = await contract.listOptionOnExchange(
-      address,
-      contractExpiration,
-      strikePrice,
-      2,
-      premiumPrice,
-      tokenAmt,
-      token + "_USD"
-    );
-
-    await tx.wait(1);
-
-    toast({
-      title: "Option Created",
-      description: "You have successfully created the option",
-      status: "success",
-      duration: 9000,
-      isClosable: true,
+    writeContract({
+      abi: optionabi,
+      address: process.env.NEXT_PUBLIC_OPTION_TRADING,
+      functionName: "listOptionOnExchange",
+      args: [
+        account.addresses[0],
+        contractExpiration,
+        strikePrice,
+        2,
+        premiumPrice,
+        tokenAmt,
+        token + "_USD",
+      ],
     });
   };
 
@@ -181,9 +155,11 @@ const CreateOptionForm = () => {
             />
           </FormControl>
           <Button colorScheme="teal" variant="solid" onClick={approval}>
-            {isApproved ? "Approved Successfully!" : "Approve Contract"}
+            {hash && isConfirmed
+              ? "Approved Successfully!"
+              : "Approve Contract"}
           </Button>
-          {isApproved && (
+          {hash && isConfirmed && (
             <Button colorScheme="teal" variant="solid" onClick={createOption}>
               Create Option
             </Button>
