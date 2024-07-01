@@ -6,6 +6,27 @@ import { type State, WagmiProvider } from "wagmi";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { getConfig } from "./wagmi";
 import { baseSepolia } from "viem/chains";
+import { http, cookieStorage, createConfig, createStorage } from "wagmi";
+import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
+import "@coinbase/onchainkit/styles.css";
+
+const wagmiConfig = createConfig({
+  chains: [baseSepolia],
+  connectors: [
+    coinbaseWallet({
+      appName: "onchainkit",
+    }),
+    injected(),
+    walletConnect({ projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID! }),
+  ],
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+  ssr: true,
+  transports: {
+    [baseSepolia.id]: http(),
+  },
+});
 
 export function Providers(props: {
   children: ReactNode;
@@ -15,7 +36,7 @@ export function Providers(props: {
   const queryClient = new QueryClient();
 
   return (
-    <WagmiProvider config={config} initialState={props.initialState}>
+    <WagmiProvider config={wagmiConfig} initialState={props.initialState}>
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider
           apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API}
