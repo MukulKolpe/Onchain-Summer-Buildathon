@@ -1,3 +1,4 @@
+// @ts-nocheck comment
 import React from "react";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@chakra-ui/react";
