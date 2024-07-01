@@ -61,7 +61,7 @@ export default function Home() {
                 </Text>
                 <br />{" "}
                 <Text color={"blue.500"} as={"span"}>
-                  Smart Profits.
+                  Smart Profits...
                 </Text>{" "}
               </Heading>
               <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>

@@ -79,7 +79,7 @@ export default function Navbar() {
                 width={94}
                 height={150}
               /> */}
-              Onchain Summer Buildathon
+              OptiFlow
             </Link>
           </HStack>
           <Flex alignItems={"center"}>
