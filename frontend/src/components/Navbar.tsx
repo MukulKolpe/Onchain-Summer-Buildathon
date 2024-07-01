@@ -22,11 +22,27 @@ import {
   AddIcon,
   WarningTwoIcon,
 } from "@chakra-ui/icons";
+import { color } from "@coinbase/onchainkit/theme";
 // import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 // import { ethers } from "ethers";
 import { Link } from "@chakra-ui/next-js";
 import { useAccount } from "wagmi";
+import {
+  Address,
+  Avatar,
+  Name,
+  Badge,
+  Identity,
+  EthBalance,
+} from "@coinbase/onchainkit/identity";
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownLink,
+  WalletDropdownDisconnect,
+} from "@coinbase/onchainkit/wallet";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -111,14 +127,31 @@ export default function Navbar() {
                 </>
               )}
 
-              {/* <HStack>
-                <ConnectButton
-                  accountStatus={{
-                    smallScreen: "avatar",
-                    largeScreen: "full",
-                  }}
-                />
-              </HStack> */}
+              <HStack>
+                <Wallet>
+                  <ConnectWallet>
+                    <Avatar />
+                    <Name />
+                  </ConnectWallet>
+                  <WalletDropdown>
+                    <Identity
+                      hasCopyAddressOnClick
+                      schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+                    >
+                      <Avatar />
+                      <Name>
+                        <Badge />
+                      </Name>
+                      <Address className={color.foregroundMuted} />
+                      <EthBalance />
+                    </Identity>
+                    <WalletDropdownLink href="/profile">
+                      Profile
+                    </WalletDropdownLink>
+                    <WalletDropdownDisconnect />
+                  </WalletDropdown>
+                </Wallet>
+              </HStack>
             </div>
           </Flex>
         </Flex>

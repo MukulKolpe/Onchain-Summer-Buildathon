@@ -7,7 +7,9 @@ export function getConfig() {
     chains: [baseSepolia],
     connectors: [
       injected(),
-      coinbaseWallet(),
+      coinbaseWallet({
+        appName: "onchainkit",
+      }),
       walletConnect({ projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID! }),
     ],
     storage: createStorage({
