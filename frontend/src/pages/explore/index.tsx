@@ -17,10 +17,13 @@ import {
   HStack,
   Spinner,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 const Explore = () => {
   const [options, setOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
   useEffect(() => {
     const getOptions = async () => {
       const rpc = "https://sepolia.base.org";
@@ -84,7 +87,14 @@ const Explore = () => {
                       <Td>{item.units.toString()}</Td>
                       <Td>{days} Left</Td>
                       <Td>
-                        <Button colorScheme="teal">Bid</Button>
+                        <Button
+                          onClick={() =>
+                            router.push(`/contract/${item[0].toString()}`)
+                          }
+                          colorScheme="teal"
+                        >
+                          Bid
+                        </Button>
                       </Td>
                     </Tr>
                   );
