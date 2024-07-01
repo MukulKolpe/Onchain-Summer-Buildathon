@@ -1,3 +1,4 @@
+// @ts-nocheck comment
 import { http, cookieStorage, createConfig, createStorage } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
 import { coinbaseWallet, injected, walletConnect } from "wagmi/connectors";
