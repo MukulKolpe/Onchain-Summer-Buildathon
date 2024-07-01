@@ -127,6 +127,18 @@ export default function Navbar() {
                 </>
               )}
 
+              <HStack
+                as={"nav"}
+                spacing={4}
+                display={{ base: "none", md: "flex" }}
+                marginRight={4}
+              >
+                <Link href="/connect">
+                  <Button w="full" variant="ghost">
+                    Connect other EOA
+                  </Button>
+                </Link>
+              </HStack>
               <HStack>
                 <Wallet>
                   <ConnectWallet>
