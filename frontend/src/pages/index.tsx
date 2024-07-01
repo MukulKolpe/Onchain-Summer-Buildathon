@@ -1,112 +1,108 @@
 "use client";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { Button } from "@chakra-ui/react";
-import {
-  Address,
-  Avatar,
-  Name,
-  Badge,
-  Identity,
-  EthBalance,
-} from "@coinbase/onchainkit/identity";
-import {
-  ConnectWallet,
-  Wallet,
-  WalletDropdown,
-  WalletDropdownLink,
-  WalletDropdownDisconnect,
-} from "@coinbase/onchainkit/wallet";
-import "@coinbase/onchainkit/styles.css";
-import { color } from "@coinbase/onchainkit/theme";
+import Head from "next/head";
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
 
-import { useColorModeValue } from "@chakra-ui/color-mode";
-import { Flex, Center } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Heading,
+  Image,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
-function Home() {
+const inter = Inter({ subsets: ["latin"] });
+
+export default function Home() {
+  const router = useRouter();
   const account = useAccount();
-  const { connectors, connect, status, error } = useConnect();
-  const { disconnect } = useDisconnect();
-  const color = useColorModeValue("indigo", "indigo.600");
+
+  const registerRedirect = () => {
+    router.push("/connect");
+  };
+
+  const exploreContracts = () => {
+    router.push("/explore");
+  };
 
   return (
     <>
-      <div>
-        <h2>Account</h2>
+      <Stack minH={"100vh"} direction={{ base: "column", md: "row" }}>
+        <Flex
+          flexDir={{ base: "column", md: "row" }}
+          alignItems={"center"}
+          justifyContent={"center"}
+          flex={1}
+          px={{ base: 4, md: 20, lg: 28 }}
+          ml={{ base: 0, md: 0, lg: 20 }}
+        >
+          <Flex p={8} flex={1} align={"center"} justify={"center"}>
+            <Stack spacing={6} w={"full"} maxW={"lg"}>
+              <Heading fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}>
+                <Text
+                  as={"span"}
+                  position={"relative"}
+                  _after={{
+                    content: "''",
+                    width: "full",
+                    height: useBreakpointValue({ base: "20%", md: "30%" }),
+                    position: "absolute",
+                    bottom: 1,
+                    left: 0,
+                    bg: "blue.500",
+                    zIndex: -1,
+                  }}
+                >
+                  Strategic Options.
+                </Text>
+                <br />{" "}
+                <Text color={"blue.500"} as={"span"}>
+                  Smart Profits.
+                </Text>{" "}
+              </Heading>
+              <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
+                Simplify your trading journey with our intuitive options trading
+                platform.
+              </Text>
+              <Stack direction={{ base: "column", md: "row" }} spacing={4}>
+                <Button
+                  rounded={"full"}
+                  bg={"blue.500"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.600",
+                  }}
+                  width={{ base: "full", md: "auto" }}
+                  onClick={registerRedirect}
+                >
+                  Start Now!
+                </Button>
 
-        <div>
-          status: {account.status}
-          <br />
-          {account.addresses !== undefined && (
-            <Address
-              className="bg-white px-2 py-1"
-              address={account.addresses[0]} // OnchainKit Working Component
+                <Button
+                  width={{ base: "full", md: "auto" }}
+                  rounded={"full"}
+                  onClick={exploreContracts}
+                >
+                  Explore Option Contracts
+                </Button>
+              </Stack>
+            </Stack>
+          </Flex>
+          <Flex flex={1}>
+            <Image
+              alt={"Login Image"}
+              objectFit={"cover"}
+              srcSet="/assets/option-trading.png"
+              width={{ base: 300, md: 450, lg: 550 }}
+              // height={450}
             />
-          )}
-          <br />
-          chainId: {account.chainId}
-        </div>
-
-        {account.status === "connected" && (
-          <Button type="button" onClick={() => disconnect()}>
-            Disconnect
-          </Button>
-        )}
-      </div>
-
-      <div>
-        <h2>Connect</h2>
-        <Flex px={4} py={6} direction="column" width="30%" gap="6">
-          {connectors.map((connector) => (
-            <Button
-              key={connector.uid}
-              onClick={() => {
-                connect({ connector });
-                status === "connected" && connector.name === "Coinbase Wallet"
-                  ? connector.disconnect()
-                  : null;
-              }}
-              type="button"
-              colorScheme={connector.name === "MetaMask" ? "orange" : "gray"}
-              py={6}
-              px={10}
-            >
-              {connector.name === "Injected"
-                ? "Connect with MetaMask"
-                : connector.name}
-            </Button>
-          ))}
+          </Flex>
         </Flex>
-
-        <div>{status}</div>
-        <div>{error?.message}</div>
-
-        <Center>
-          {/* // OnchainKit Working Components */}
-          <Wallet>
-            <ConnectWallet>
-              <Avatar />
-              <Name />
-            </ConnectWallet>
-            <WalletDropdown>
-              <Identity
-                hasCopyAddressOnClick
-                schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
-              >
-                <Avatar />
-                <Name>
-                  <Badge />
-                </Name>
-                <Address className={color.foregroundMuted} />
-                <EthBalance />
-              </Identity>
-              <WalletDropdownLink href="/profile">Profile</WalletDropdownLink>
-              <WalletDropdownDisconnect />
-            </WalletDropdown>
-          </Wallet>
-        </Center>
-      </div>
+      </Stack>
     </>
   );
 }
-
-export default Home;
