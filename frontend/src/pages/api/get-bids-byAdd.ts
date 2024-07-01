@@ -27,6 +27,7 @@ export default async function handler(
       .select("*")
       .eq("option_id", optionId)
       .eq("user_address", address)
+      .eq("isAccepted", true)
       .order("created_at", { ascending: false });
 
     if (options_bid) {
