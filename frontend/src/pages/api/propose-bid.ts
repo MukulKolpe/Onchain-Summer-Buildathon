@@ -1,6 +1,6 @@
 // @ts-nocheck comment
 import type { NextApiRequest, NextApiResponse } from "next";
-import supabase from "../../utils/supabase/supaBaseClient";
+import supabase from "../../utils/db/supaBaseClient";
 
 export default async function handler(
   req: NextApiRequest,
